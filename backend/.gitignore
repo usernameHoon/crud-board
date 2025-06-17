@@ -1,0 +1,37 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+*.log
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# Eclipse
+*.classpath
+*.project
+*.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# OS 별 임시 파일
+.DS_Store
+Thumbs.db
+
+# 환경 설정 및 민감 정보
+application.properties
+application.yml
+.env

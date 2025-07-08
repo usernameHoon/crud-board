@@ -48,7 +48,7 @@ public class PostController {
       @RequestParam("name") String name,
       @RequestParam("title") String title,
       @RequestParam("content") String content,
-      @RequestParam(value = "attachment[]", required = false) MultipartFile[] attachments) {
+      @RequestParam(value = "attachments", required = false) MultipartFile[] attachments) {
 
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

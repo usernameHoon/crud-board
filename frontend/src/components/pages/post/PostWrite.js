@@ -80,8 +80,8 @@ const PostWrite = () => {
                 <td>
                   <input
                     type="file"
-                    id="attachment"
-                    name="attachment"
+                    id="attachments"
+                    name="attachments"
                     multiple
                     onChange={(e) => handleFileChange(e, setAttachments)}
                   />

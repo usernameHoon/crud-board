@@ -21,7 +21,7 @@ crud-board/
 
 ## 🛠 기술 스택
 
-- [**Backend**](https://github.com/usernameHoon/crud-board/tree/main/backend/src/main/java/com/sideproject/board): Spring Boot, JPA, MySQL]
+- [**Backend**](https://github.com/usernameHoon/crud-board/tree/main/backend/src/main/java/com/sideproject/board): Spring Boot, JPA, MySQL
 - [**Frontend**](https://github.com/usernameHoon/crud-board/tree/main/frontend/src): React, Axios, HTML/CSS
 - **Build Tools**: Maven, npm
 

@@ -64,7 +64,9 @@ public class PostService {
       for (MultipartFile file : attachments) {
         if (!file.isEmpty()) {
           String originalFileName = file.getOriginalFilename();
-          String uuidFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+          String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+          String uuidFileName = UUID.randomUUID().toString() + extension;
+
           File dest = new File(uploadDir + uuidFileName);
           file.transferTo(dest);
 
@@ -145,6 +147,7 @@ public class PostService {
   @Transactional
   public void updatePost(Long postId, Long userId, String title, String content, MultipartFile[] attachments,
       String deletedAttachmentsJson) throws IOException {
+
     Post post = postRepository.findById(postId)
         .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
 
@@ -155,6 +158,7 @@ public class PostService {
     post.setTitle(title);
     post.setContent(content);
 
+    // ✅ 삭제 요청된 첨부파일 처리
     if (deletedAttachmentsJson != null && !deletedAttachmentsJson.isEmpty()) {
       ObjectMapper objectMapper = new ObjectMapper();
       List<Long> deletedIds = objectMapper.readValue(deletedAttachmentsJson, new TypeReference<List<Long>>() {
@@ -167,19 +171,23 @@ public class PostService {
       attachmentsToRemove.forEach(post.getAttachments()::remove);
     }
 
+    // ✅ 새 첨부파일 처리
     if (attachments != null && attachments.length > 0) {
       for (MultipartFile file : attachments) {
         if (!file.isEmpty()) {
           String originalFileName = file.getOriginalFilename();
-          File dest = new File(uploadDir + originalFileName);
+          String extension = originalFileName.substring(originalFileName.lastIndexOf(".")); // 예: .txt
+          String storedFileName = UUID.randomUUID().toString() + extension;
+
+          File dest = new File(uploadDir + storedFileName);
           file.transferTo(dest);
 
           System.out.println("📌 저장된 파일: " + dest.getAbsolutePath());
 
-          // ✅ Attachment 객체 생성 후 post에 추가
           Attachment attachment = new Attachment();
-          attachment.setFileName(originalFileName);
-          attachment.setFilePath(dest.getAbsolutePath());
+          attachment.setFileName(originalFileName); // 사용자에게 보여질 이름
+          attachment.setStoredFileName(storedFileName); // 서버에 저장된 이름
+          attachment.setFilePath(dest.getAbsolutePath()); // 전체 경로
           attachment.setPost(post);
 
           post.addAttachment(attachment);

@@ -11,7 +11,7 @@ export const fetchComments = async (postId, page = 1, token) => {
 };
 
 export const addComment = async (postId, content, token) => {
-  return fetch(`${API_BASE_URL}/${postId}/comments`, {
+  const response = await fetch(`${API_BASE_URL}/${postId}/comments`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -19,7 +19,13 @@ export const addComment = async (postId, content, token) => {
     },
     body: JSON.stringify({ content }),
   });
-};
+
+  if (!response.ok) {
+    throw new Error(`댓글 작성 실패: ${response.status}`);
+  }
+
+  return response.json();
+}
 
 export const deleteComment = async (postId, commentId, token) => {
   return fetch(`${API_BASE_URL}/${postId}/comments/${commentId}`, {
@@ -31,7 +37,7 @@ export const deleteComment = async (postId, commentId, token) => {
 };
 
 export const editComment = async (postId, commentId, content, token) => {
-  return fetch(`${API_BASE_URL}/${postId}/comments/${commentId}`, {
+  const response = await fetch(`${API_BASE_URL}/${postId}/comments/${commentId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -39,4 +45,10 @@ export const editComment = async (postId, commentId, content, token) => {
     },
     body: JSON.stringify({ content }),
   });
-};
+
+  if (!response.ok) {
+    throw new Error(`댓글 수정 실패: ${response.status}`);
+  }
+
+  return response.json();
+}

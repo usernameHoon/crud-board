@@ -27,6 +27,7 @@ public class CommentDTO {
     this.updatedAt = comment.getUpdatedAt();
     this.isAuthor = (comment.getUser() != null) && (currentUserId != null)
         && comment.getUser().getId().equals(currentUserId);
-    this.isEdited = Boolean.TRUE.equals(comment.getUpdatedAt() != null);
+    this.isEdited = comment.getUpdatedAt() != null &&
+        !comment.getUpdatedAt().equals(comment.getCreatedAt());
   }
 }

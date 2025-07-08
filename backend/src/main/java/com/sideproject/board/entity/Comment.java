@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Getter
 @Setter
@@ -30,8 +32,17 @@ public class Comment {
   @Column(nullable = false, length = 3000)
   private String content; // 댓글 내용
 
+  @Column(nullable = false)
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime createdAt = LocalDateTime.now(); // 생성 시간
 
-  @Column(nullable = true) // 수정된 시간이 null 가능하도록 설정
+  @Column(nullable = false) // 수정된 시간이 null 불가능하도록 설정
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime updatedAt;
+
+  @PrePersist
+  protected void onCreate() {
+    this.createdAt = LocalDateTime.now();
+    this.updatedAt = LocalDateTime.now();
+  }
 }

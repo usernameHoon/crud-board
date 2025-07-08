@@ -11,7 +11,6 @@ crud-board/
 └── README.md      # 프로젝트 설명서
 ```
 
-```
 ## 🧩 주요 기능
 
 - 게시글 등록, 조회, 수정, 삭제 (CRUD) / 첨부파일 포함
@@ -19,19 +18,25 @@ crud-board/
 - 사용자 인터페이스를 통한 게시글 관리
 - RESTful API 기반 통신
 
-## 🛠 기술 스택
+```
+```
 
+## 🛠 기술 스택
+```
 - **Backend**: Spring Boot, JPA, MySQL
 - **Frontend**: React, Axios, HTML/CSS
 - **Build Tools**: Maven, npm
 
+```
 ## 🖼️ 실행 화면
 
 > 추후 실행 화면(스크린샷)을 이곳에 추가할 예정입니다.
 
 예시:
 ```
+
 📸 게시글 목록 화면
 📸 게시글 작성 화면
 📸 게시글 상세 보기 화면
+
 ```

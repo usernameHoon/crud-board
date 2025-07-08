@@ -19,6 +19,21 @@ const Comment = ({ postId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const formatCommentDate = (comment) => {
+    const created = new Date(comment.createdAt);
+    const updated = new Date(comment.updatedAt);
+
+    const createdStr = !isNaN(created) ? created.toLocaleString() : "날짜 없음";
+    const updatedStr = !isNaN(updated) ? updated.toLocaleString() : null;
+
+    const isEdited = updatedStr && updated.getTime() !== created.getTime();
+
+    return isEdited
+      ? `${createdStr} (수정됨: ${updatedStr}) `
+      : createdStr + " ";
+  };
+
+
   useEffect(() => {
     const loadComments = async () => {
       try {
@@ -30,8 +45,26 @@ const Comment = ({ postId }) => {
         console.error(error);
       }
     };
+
     loadComments();
   }, [postId, currentPage]);
+
+  const getPageNumbers = (current, total, maxVisible = 5) => {
+    const half = Math.floor(maxVisible / 2);
+    let start = Math.max(current - half, 1);
+    let end = start + maxVisible - 1;
+
+    if (end > total) {
+      end = total;
+      start = Math.max(end - maxVisible + 1, 1);
+    }
+
+    const pages = [];
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  };
 
   return (
     <div className="comment-container">
@@ -41,7 +74,7 @@ const Comment = ({ postId }) => {
           <div className="comment-item" key={comment.id || `comment-${index}`}>
             <strong>{comment.username}</strong>
             <span className="comment-meta">
-              {new Date(comment.updatedAt ?? comment.createdAt).toLocaleString()} {comment.edited && " (수정됨) "}
+              {formatCommentDate(comment)}
               {Boolean(comment.author) && (
                 <>
                   |<button onClick={() => { setEditingComment(comment.id); setEditContent(comment.content); }} className="link">수정</button>
@@ -71,18 +104,15 @@ const Comment = ({ postId }) => {
           <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1} className="pagination-btn">«</button>
           <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className="pagination-btn">‹</button>
 
-          {[...Array(totalPages)].map((_, i) => {
-            const pageNumber = i + 1;
-            return (
-              <button
-                key={`pagination-${postId || "unknown"}-${pageNumber}`} // postId가 없을 경우 "unknown"을 사용하여 key 충돌 방지
-                onClick={() => setCurrentPage(pageNumber)}
-                className={`pagination-btn ${currentPage === pageNumber ? "active" : ""}`}
-              >
-                {pageNumber}
-              </button>
-            );
-          })}
+          {getPageNumbers(currentPage, totalPages).map((pageNumber) => (
+            <button
+              key={`pagination-${postId || "unknown"}-${pageNumber}`}
+              onClick={() => setCurrentPage(pageNumber)}
+              className={`pagination-btn ${currentPage === pageNumber ? "active" : ""}`}
+            >
+              {pageNumber}
+            </button>
+          ))}
 
           <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages} className="pagination-btn">›</button>
           <button onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages} className="pagination-btn">»</button>

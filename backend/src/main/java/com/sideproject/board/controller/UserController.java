@@ -46,6 +46,6 @@ public class UserController {
   @PostMapping("/signup")
   public ResponseEntity<?> register(@RequestBody UserRequestDTO requestDTO) {
     userService.registerUser(requestDTO);
-    return ResponseEntity.ok("회원가입 성공");
+    return ResponseEntity.ok(Map.of("message", "회원가입 성공"));
   }
 }

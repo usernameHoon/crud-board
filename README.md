@@ -22,12 +22,12 @@ crud-board/
 ```
 
 ## 🛠 기술 스택
-```
+
 - [**Backend**: Spring Boot, JPA, MySQL](https://github.com/usernameHoon/crud-board/tree/main/backend/src/main/java/com/sideproject/board)
 - **Frontend**: React, Axios, HTML/CSS
 - **Build Tools**: Maven, npm
 
-```
+
 ## 🖼️ 실행 화면
 
 > 추후 실행 화면(스크린샷)을 이곳에 추가할 예정입니다.

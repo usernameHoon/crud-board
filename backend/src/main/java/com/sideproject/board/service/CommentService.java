@@ -47,6 +47,7 @@ public class CommentService {
     comment.setPost(post);
     comment.setUser(user);
     comment.setContent(content);
+    comment.setCreatedAt(LocalDateTime.now());
 
     commentRepository.save(comment);
 

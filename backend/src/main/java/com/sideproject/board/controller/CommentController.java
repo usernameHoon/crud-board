@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.domain.Sort;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +35,7 @@ public class CommentController {
   @GetMapping
   public ResponseEntity<Page<CommentDTO>> getComments(
       @PathVariable("postId") Long postId,
-      Pageable pageable) {
+      @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
     Long userId = null;
     String email = null;
 

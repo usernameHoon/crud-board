@@ -1,23 +1,34 @@
-import { addComment, deleteComment, editComment } from "../services/commentServices";
+import { addComment, deleteComment, editComment, fetchComments } from "../services/commentServices";
 import { getToken } from "../services/authService";
 
-export const handleCommentWrite = async (postId, newComment, setNewComment, setComments, setCurrentPage, navigate) => {
-  if (!newComment.trim())
-    return alert("댓글을 입력하세요.");
+export const handleCommentWrite = async (
+  postId,
+  newComment,
+  setNewComment,
+  setComments,
+  setCurrentPage,
+  setTotalPages,
+  navigate
+) => {
+  if (!newComment.trim()) return alert("댓글을 입력하세요.");
 
   const token = getToken();
-
   if (!token) {
     alert("로그인 후 이용해주세요.");
     return navigate("/login");
   }
+
   try {
-    const addedComment = await addComment(postId, newComment, token);
+    await addComment(postId, newComment, token); // 작성 요청
+
     setNewComment("");
-    setComments((prev) => [addedComment, ...prev]);
-    setCurrentPage(1);
+    setCurrentPage(1); // 페이지 초기화
+
+    const updatedData = await fetchComments(postId, 1, token);
+    setComments(updatedData.content.sort((a, b) => b.id - a.id));
+    setTotalPages(updatedData.totalPages);
   } catch (error) {
-    console.error("Error adding comment:", error);
+    console.error("댓글 작성 오류:", error);
   }
 };
 
@@ -35,19 +46,22 @@ export const handleCommentDelete = async (postId, commentId, setComments) => {
   }
 };
 
-export const handleCommentEdit = async (postId, commentId, editContent, setComments, setEditingComment) => {
-  if (!editContent.trim())
-    return alert("댓글을 입력하세요.");
-
+export const handleCommentEdit = async (postId, commentId, content, setComments, setEditingComment) => {
   const token = getToken();
+  if (!token) return;
 
   try {
-    await editComment(postId, commentId, editContent, token);
-    setComments((prev) =>
-      prev.map((c) => (c.id === commentId ? { ...c, content: editContent, edited: true } : c))
+    const updatedComment = await editComment(postId, commentId, content, token);
+
+    setComments(prev =>
+      prev.map(comment =>
+        comment.id === commentId ? updatedComment : comment
+      )
     );
+
     setEditingComment(null);
   } catch (error) {
-    console.error("Error updating comment:", error);
+    console.error("댓글 수정 중 오류:", error);
   }
 };
+
